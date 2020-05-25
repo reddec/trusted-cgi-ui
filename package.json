@@ -1,0 +1,36 @@
+{
+  "name": "trusted-cgi-ui",
+  "version": "0.0.1",
+  "description": "A trusted CGI web portal",
+  "productName": "Trusted CGI",
+  "cordovaId": "net.reddec.trusted-cgi",
+  "capacitorId": "",
+  "author": "Aleksandr Baryshnikov <owner@reddec.net>",
+  "repository": "https://github.com/reddec/trusted-cgi-ui",
+  "private": true,
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.0.0",
+    "echarts": "^4.7.0",
+    "quasar": "^1.9.5",
+    "vue-class-component": "^7.2.2",
+    "vue-echarts": "^5.0.0-beta.0",
+    "vue-property-decorator": "^8.3.0"
+  },
+  "devDependencies": {
+    "@quasar/app": "^1.6.2",
+    "@quasar/quasar-app-extension-qmarkdown": "^1.0.26",
+    "@types/node": "^10.17.15",
+    "vue2-ace-editor": "0.0.15"
+  },
+  "engines": {
+    "node": ">= 10.18.1",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  },
+  "browserslist": [
+    "last 1 version, not dead, ie >= 11"
+  ]
+}
