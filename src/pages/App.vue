@@ -15,10 +15,10 @@
             indicator-color="primary"
           >
             <q-tab name="overview" label="Overview" icon="web_asset"/>
+            <q-tab name="files" label="Files" icon="folder"/>
             <q-tab name="stats" label="Stats" icon="bar_chart"/>
             <q-tab name="launcher" label="Launcher" icon="launch"/>
             <q-tab name="playground" label="Playground" icon="play_arrow"/>
-            <q-tab name="files" label="Files" icon="folder"/>
             <q-tab name="limits" label="Limits" icon="speed"/>
             <q-tab name="mapping" label="Mapping" icon="shuffle"/>
             <q-tab name="security" label="Security" icon="security"/>
