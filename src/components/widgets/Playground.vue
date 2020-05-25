@@ -44,7 +44,7 @@
           <q-btn icon="send" flat :loading="running" @click="run()">run</q-btn>
         </div>
       </div>
-      <div class="row q-col-gutter-sm" v-if="response.status">
+      <div class="row q-col-gutter-sm" v-if="response.code">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
           <q-card flat bordered square>
 
