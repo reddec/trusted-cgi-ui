@@ -2,17 +2,17 @@
   <div>
     <q-card flat>
       <div class="row q-col-gutter-sm">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-          <editor v-model="payload"
-                  @init="editorInit" lang="json" theme="chrome"
-                  height="300px"></editor>
 
-        </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-          <div v-if="!selectedApp.manifest.public">
+          <editor v-model="payload" @init="editorInit" lang="json" theme="chrome" height="300px"/>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div v-if="!isPublic">
             <q-select label="Token" v-model='token' :options="Object.keys(selectedApp.manifest.tokens || {})"/>
             <br/>
           </div>
+
           <q-list bordered>
             <q-item-label header>Headers</q-item-label>
             <q-item v-for="(value, index) in headers" :key="index">
@@ -171,7 +171,7 @@
     methods: {
       async run() {
         this.running = true;
-        this.response = {
+        this.$set(this, 'response', {
           code: 0,
           status: '',
           headers: [],
@@ -179,7 +179,7 @@
           time: 0,
           time_fb: 0,
           time_pd: 0,
-        }
+        })
         try {
           const begin = Date.now()
           const res = await fetch(baseURL + 'a/' + this.selectedApp?.uid, {
@@ -230,6 +230,9 @@
       ...mapState([
         'selectedApp',
       ]),
+      isPublic() {
+        return this.selectedApp.manifest.public
+      }
     }
   }
 </script>
