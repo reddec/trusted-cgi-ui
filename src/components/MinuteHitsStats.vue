@@ -154,7 +154,6 @@
           merged.push([new Date(last).toISOString(), num])
         }
         let res = {x: x.reverse(), y: y.reverse(), merged: merged.reverse()};
-        console.log(res)
         return res;
       }
     }
