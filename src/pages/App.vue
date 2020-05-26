@@ -11,6 +11,7 @@
       >
         <q-tab name="overview" label="Overview" icon="web_asset"/>
         <q-tab name="files" label="Files" icon="folder"/>
+        <q-tab name="actions" label="Actions" icon="label_important"/>
         <q-tab name="stats" label="Stats" icon="bar_chart"/>
         <q-tab name="launcher" label="Launcher" icon="launch"/>
         <q-tab name="playground" label="Playground" icon="play_arrow"/>
@@ -27,6 +28,9 @@
             <q-chip :icon="selectedApp.manifest.public ? 'public' : 'security'">{{ api }}</q-chip>
           </div>
           <Overview/>
+        </q-tab-panel>
+        <q-tab-panel name="actions">
+          <Actions/>
         </q-tab-panel>
         <q-tab-panel name="stats">
           <AppStats/>
@@ -72,6 +76,7 @@
   import Launcher from "../components/widgets/Launcher";
   import Playground from "../components/widgets/Playground";
   import AppStats from "../components/widgets/AppStats";
+  import Actions from "../components/widgets/Actions";
 
   // TODO: add upload/download tarball
   // TODO: make CLI?
@@ -81,7 +86,7 @@
 
   export default {
     name: "App",
-    components: {AppStats, Playground, Launcher, Mapping, Security, Limits, Overview, FileEditor, FileBrowser},
+    components: {Actions, AppStats, Playground, Launcher, Mapping, Security, Limits, Overview, FileEditor, FileBrowser},
     props: {
       name: {
         required: true,
