@@ -5,11 +5,10 @@
         <q-card-section>
           <div class="text-h6">{{selectedApp.manifest.name || selectedApp.uid}}</div>
         </q-card-section>
-
+        <q-separator/>
         <q-card-section>
           <q-markdown :src="selectedApp.manifest.description"/>
         </q-card-section>
-        <q-separator/>
       </div>
       <div v-else>
         <q-input label="Name" filled v-model="name"/>
@@ -31,15 +30,17 @@
 </template>
 
 <script>
-  import client from '../../api'
+  import client, {baseURL} from '../../api'
 
   import {createNamespacedHelpers} from "vuex";
+  import Aliases from "./Aliases";
 
   const {mapState, mapActions, mapGetters} = createNamespacedHelpers('user')
 
 
   export default {
     name: "Overview",
+    components: {Aliases},
     data() {
       return {
         saving: false,
@@ -93,7 +94,7 @@
       ...mapState([
         'selectedApp',
         'token'
-      ]),
+      ])
     }
   }
 </script>

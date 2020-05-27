@@ -24,9 +24,7 @@
 
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="overview">
-          <div>
-            <q-chip :icon="selectedApp.manifest.public ? 'public' : 'security'">{{ api }}</q-chip>
-          </div>
+          <Aliases/>
           <Overview/>
         </q-tab-panel>
         <q-tab-panel name="actions">
@@ -77,6 +75,7 @@
   import Playground from "../components/widgets/Playground";
   import AppStats from "../components/widgets/AppStats";
   import Actions from "../components/widgets/Actions";
+  import Aliases from "../components/widgets/Aliases";
 
   // TODO: add upload/download tarball
   // TODO: make CLI?
@@ -86,7 +85,10 @@
 
   export default {
     name: "App",
-    components: {Actions, AppStats, Playground, Launcher, Mapping, Security, Limits, Overview, FileEditor, FileBrowser},
+    components: {
+      Aliases,
+      Actions, AppStats, Playground, Launcher, Mapping, Security, Limits, Overview, FileEditor, FileBrowser
+    },
     props: {
       name: {
         required: true,
