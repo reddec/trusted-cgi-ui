@@ -16,7 +16,7 @@
             <q-btn icon="delete" @click="()=>$delete(clone.tokens,token)" flat dense round/>
           </q-item-section>
         </q-item>
-        <q-item clickable v-ripple @click="newToken.dialog = true">
+        <q-item clickable v-ripple @click="openTokenDialog">
           <q-item-section avatar>
             <q-icon name="add"/>
           </q-item-section>
@@ -86,7 +86,9 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-input dense v-model="newToken.label" autofocus/>
+          <q-input dense v-model="newToken.label" label="Label" autofocus/>
+          <br/>
+          <q-input dense v-model="newToken.token" label="Token"/>
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
@@ -148,7 +150,8 @@
         clone: {},
         newToken: {
           dialog: false,
-          label: ''
+          label: '',
+          token: '',
         },
         newIP: {
           dialog: false,
@@ -179,11 +182,12 @@
       },
       openTokenDialog() {
         this.newToken.label = '';
+        this.newToken.token = uuidv4()
         this.newToken.dialog = true;
       },
       addToken() {
         if (this.clone.tokens) {
-          this.$set(this.clone.tokens, uuidv4(), this.newToken.label)
+          this.$set(this.clone.tokens, this.newToken.token || uuidv4(), this.newToken.label)
         } else {
           this.$set(this.clone, 'tokens', {
             [uuidv4()]: this.newToken.label,
