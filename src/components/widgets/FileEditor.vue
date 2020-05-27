@@ -80,12 +80,14 @@
         require('brace/mode/json')
         require('brace/mode/php')
         require('brace/mode/perl')
+        require('brace/mode/makefile')
         require('brace/mode/javascript')    //language
       }
     },
     computed: {
       language() {
-        const ext = this.file.substr(this.file.lastIndexOf('.') + 1);
+        let basename = this.file.substr(this.file.lastIndexOf('/')+1);
+        const ext = basename.substr(basename.lastIndexOf('.') + 1);
         return {
           'py': 'python',
           'html': 'html',
@@ -93,7 +95,9 @@
           'js': 'javascript',
           'json': 'json',
           'php': 'php',
-          'pl': 'perl'
+          'pl': 'perl',
+          'Makefile': 'makefile',
+          'makefile': 'makefile'
         }[ext] || 'text'
       },
       ...mapState([
