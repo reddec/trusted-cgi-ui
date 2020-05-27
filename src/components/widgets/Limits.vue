@@ -46,7 +46,7 @@
           this.$store.commit('user/selectedApp', app);
           //this.$store.commit('user/selectedApp', app);
         } catch (e) {
-          this.console.error(e)
+          console.error(e)
         } finally {
           this.saving = false
         }

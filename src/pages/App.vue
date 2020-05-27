@@ -14,6 +14,7 @@
         <q-tab name="actions" label="Actions" icon="label_important"/>
         <q-tab name="stats" label="Stats" icon="bar_chart"/>
         <q-tab name="launcher" label="Launcher" icon="launch"/>
+        <q-tab name="scheduler" label="Schedule" icon="alarm"/>
         <q-tab name="playground" label="Playground" icon="play_arrow"/>
         <q-tab name="limits" label="Limits" icon="speed"/>
         <q-tab name="mapping" label="Mapping" icon="shuffle"/>
@@ -35,6 +36,9 @@
         </q-tab-panel>
         <q-tab-panel name="launcher">
           <Launcher/>
+        </q-tab-panel>
+        <q-tab-panel name="scheduler">
+          <Scheduler/>
         </q-tab-panel>
         <q-tab-panel name="playground">
           <Playground/>
@@ -76,6 +80,7 @@
   import AppStats from "../components/widgets/AppStats";
   import Actions from "../components/widgets/Actions";
   import Aliases from "../components/widgets/Aliases";
+  import Scheduler from "../components/widgets/Scheduler";
 
   // TODO: add upload/download tarball
   // TODO: make CLI?
@@ -86,6 +91,7 @@
   export default {
     name: "App",
     components: {
+      Scheduler,
       Aliases,
       Actions, AppStats, Playground, Launcher, Mapping, Security, Limits, Overview, FileEditor, FileBrowser
     },
