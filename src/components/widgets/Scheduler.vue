@@ -3,7 +3,7 @@
     <q-item v-for="(plan, index) in plans" :key="index">
       <q-item-section>
         <q-input label="crontab expression" v-model="clone.cron[index].cron"
-                 hint="[minute] [hour] [day] [month] [week]"/>
+                 hint="[second] [minute] [hour] [day] [month] [week]"/>
       </q-item-section>
       <q-item-section>
         <q-select v-model="clone.cron[index].action"
