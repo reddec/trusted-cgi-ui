@@ -4,7 +4,6 @@ import Vuex from 'vuex';
 import {UserState} from "src/store/user/state";
 import user from './user';
 import system from './system';
-import {API} from "src/api/client";
 
 export interface StoreInterface {
   user: UserState;

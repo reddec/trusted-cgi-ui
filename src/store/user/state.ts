@@ -1,4 +1,4 @@
-import {App, Template} from "src/api/client";
+import {App} from "src/api/project_api";
 
 export interface UserState {
   token: string;
