@@ -6,7 +6,7 @@
         <q-item-label>
           <code>{{name}}</code>
         </q-item-label>
-        <q-item-label caption>{{value}}</q-item-label>
+        <q-item-label caption style="overflow-x: auto">{{value}}</q-item-label>
       </q-item-section>
       <q-item-section side>
         <q-btn icon="delete" :loading="loading" @click="remove(name)" flat dense round/>
@@ -15,7 +15,6 @@
     <q-item>
       <q-item-section>
         <q-input filled label="name" v-model="name"/>
-
       </q-item-section>
       <q-item-section>
         <q-input filled label="value" v-model="env"/>
