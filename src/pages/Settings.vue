@@ -2,14 +2,14 @@
   <q-page class="q-col-gutter-sm q-pa-md">
     <q-linear-progress indeterminate v-if="configLoading"/>
     <div class="row q-col-gutter-md" v-else>
-      <div class="col-md col-sm-6 col-xs-12">
+      <div class="col-md-6 col-sm-6 col-xs-12">
         <ProjectSettings/>
       </div>
-      <div class="col-md col-sm-6 col-xs-12">
+      <div class="col-md-6 col-sm-6 col-xs-12">
         <UserSettings/>
       </div>
 
-      <div class="col-md col-sm-6 col-xs-12">
+      <div class="col-md-6 col-sm-6 col-xs-12">
         <q-card bordered flat square>
           <q-card-section>
             <div class="text-h6">Global environment variables</div>
@@ -25,7 +25,7 @@
         </q-card>
       </div>
 
-      <div class="col-md col-sm-6 col-xs-12">
+      <div class="col-md-6 col-sm-6 col-xs-12">
         <q-card bordered flat square>
           <q-card-section>
             <div class="text-h6">Public SSH key</div>
