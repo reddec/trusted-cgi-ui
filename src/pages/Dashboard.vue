@@ -1,7 +1,16 @@
 <template>
   <q-page class="q-col-gutter-sm q-pa-md">
     <div class="row q-col-gutter-md">
-      <div class="col-sm col-xs-12">
+      <div class="col-md col-sm-12 col-xs-12">
+        <q-card bordered square flat>
+          <q-card-section>
+            <q-input v-model="repo" label="Git repository"/>
+          </q-card-section>
+          <q-card-actions>
+            <q-btn @click="createFromGit" flat label="Create from Git" :loading="creating"/>
+          </q-card-actions>
+        </q-card>
+        <br/>
         <q-list bordered>
           <q-item>
             <q-item-section>
@@ -33,15 +42,7 @@
         </q-list>
 
       </div>
-      <div class="col-sm col-xs-12">
-        <ProjectSettings/>
-      </div>
-      <div class="col-sm col-xs-12">
-        <UserSettings/>
-      </div>
-    </div>
-    <div class="row  q-col-gutter-md">
-      <div class="col-sm col-xs-12">
+      <div class="col-md col-sm-12 col-xs-12">
         <MinuteHitsStats :records="globalStats" :bordered="true"/>
       </div>
     </div>
@@ -52,8 +53,6 @@
   import Vue from 'vue';
   import {createNamespacedHelpers} from "vuex";
   import {projectAPI} from '../api'
-  import ProjectSettings from "../components/widgets/ProjectSettings";
-  import UserSettings from "../components/widgets/UserSettings";
   import MinuteHitsStats from "../components/MinuteHitsStats";
 
   const userMod = createNamespacedHelpers('user')
@@ -62,10 +61,10 @@
 
   export default Vue.extend({
     name: 'Dashboard',
-    components: {MinuteHitsStats, UserSettings, ProjectSettings},
+    components: {MinuteHitsStats},
     data() {
       return {
-
+        repo: '',
         creating: false,
       }
     },
@@ -79,6 +78,20 @@
           const app = await projectAPI.createFromTemplate(this.token, template.name)
           this.$store.commit('user/updatedApp', app)
           this.$router.push({name: 'app', params: {'name': app.uid}})
+        } catch (e) {
+          console.error(e)
+        } finally {
+          this.creating = false
+        }
+      },
+      async createFromGit() {
+        this.creating = true;
+        try {
+          const app = await projectAPI.createFromGit(this.token, this.repo)
+          this.$store.commit('user/updatedApp', app)
+          this.$router.push({name: 'app', params: {'name': app.uid}})
+        } catch (e) {
+          console.error(e)
         } finally {
           this.creating = false
         }

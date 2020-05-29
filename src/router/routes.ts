@@ -12,6 +12,11 @@ const routes: RouteConfig[] = [
         component: () => import('pages/Dashboard.vue')
       },
       {
+        path: '/settings',
+        name: 'settings',
+        component: () => import('pages/Settings.vue')
+      },
+      {
         path: '/app/:name',
         props: true,
         name: 'app',
