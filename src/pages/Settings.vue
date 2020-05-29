@@ -8,7 +8,24 @@
       <div class="col-md col-sm-6 col-xs-12">
         <UserSettings/>
       </div>
-      <div class="col-md col-sm-12 col-xs-12">
+
+      <div class="col-md col-sm-6 col-xs-12">
+        <q-card bordered flat square>
+          <q-card-section>
+            <div class="text-h6">Global environment variables</div>
+          </q-card-section>
+          <q-card-section>
+            <Environment
+              no-title
+              :loading="configLoading || savingEnv"
+              :value="config.environment || {}"
+              @input="setEnv"
+            />
+          </q-card-section>
+        </q-card>
+      </div>
+
+      <div class="col-md col-sm-6 col-xs-12">
         <q-card bordered flat square>
           <q-card-section>
             <div class="text-h6">Public SSH key</div>
@@ -30,17 +47,36 @@
   import ProjectSettings from "../components/widgets/ProjectSettings";
   import UserSettings from "../components/widgets/UserSettings";
   import {projectAPI} from "../api";
+  import Environment from "../components/Environment";
 
   export default {
     name: "Settings",
-    components: {UserSettings, ProjectSettings},
+    components: {Environment, UserSettings, ProjectSettings},
     beforeMount() {
       this.reload()
+    },
+    data() {
+      return {
+        savingEnv: false,
+      }
     },
     methods: {
       async reload() {
         this.$store.dispatch('system/config')
       },
+      async setEnv(env) {
+        this.savingEnv = true;
+        try {
+          let config = await projectAPI.setEnvironment(this.token, {
+            environment: env
+          })
+          this.$store.commit('system/config', config)
+        } catch (e) {
+          console.error(e)
+        } finally {
+          this.savingEnv = false;
+        }
+      }
     },
     computed: {
       ...userMod.mapState([
