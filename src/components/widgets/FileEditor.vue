@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import client from '../../api'
+  import {lambdaAPI} from '../../api'
 
   import {createNamespacedHelpers} from "vuex";
 
@@ -46,7 +46,7 @@
       async save() {
         this.saving = true;
         try {
-          await client.push(this.token, this.name, this.file, btoa(this.content))
+          await lambdaAPI.push(this.token, this.name, this.file, btoa(this.content))
         } catch (e) {
           console.error(e)
         } finally {
@@ -60,7 +60,7 @@
         this.loading = true;
         this.downloaded = false;
         try {
-          const binData = await client.pull(this.token, this.name, this.file);
+          const binData = await lambdaAPI.pull(this.token, this.name, this.file);
           this.content = atob(binData)
           this.downloaded = true;
         } catch (e) {

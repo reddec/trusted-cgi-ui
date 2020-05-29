@@ -105,7 +105,7 @@
   import {createNamespacedHelpers} from "vuex";
 
   const {mapState, mapActions, mapGetters} = createNamespacedHelpers('user')
-  import client from '../../api'
+  import {lambdaAPI} from '../../api'
 
   export default {
     name: "FileBrowser",
@@ -138,7 +138,7 @@
       async reload(dir) {
         this.loading = true;
         try {
-          this.items = await client.files(this.token, this.name, dir || this.dir)
+          this.items = await lambdaAPI.files(this.token, this.name, dir || this.dir)
           return true;
         } catch (e) {
           console.error(e);
@@ -150,7 +150,7 @@
       async remove(path) {
         this.loading = true;
         try {
-          await client.removeFile(this.token, this.name, path);
+          await lambdaAPI.removeFile(this.token, this.name, path);
         } catch (e) {
           console.error(e);
           this.loading = false
@@ -164,7 +164,7 @@
         this.newDir.name = '';
         this.newFile.name = '';
         try {
-          await client.createFile(this.token, this.name, this.dir + '/' + path, !!dir);
+          await lambdaAPI.createFile(this.token, this.name, this.dir + '/' + path, !!dir);
         } catch (e) {
           console.error(e);
           this.loading = false

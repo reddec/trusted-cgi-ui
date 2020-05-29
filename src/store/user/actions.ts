@@ -1,13 +1,13 @@
 import {ActionTree} from 'vuex';
 import {StoreInterface} from '../index';
 import {UserState} from './state';
-import client from '../../api'
+import {userAPI, projectAPI, lambdaAPI} from '../../api'
 
 const actions: ActionTree<UserState, StoreInterface> = {
   async login({commit}, {login, password}) {
     commit('logging', true)
     try {
-      let token = await client.login(login, password)
+      let token = await userAPI.login(login, password)
       commit('token', token);
       return true;
     } catch (e) {
@@ -21,7 +21,7 @@ const actions: ActionTree<UserState, StoreInterface> = {
   async loadApps({commit, state}) {
     commit('loadingApps', true);
     try {
-      const list = await client.list(state.token)
+      const list = await projectAPI.list(state.token)
       commit('apps', list)
       return true;
     } catch (e) {
@@ -43,7 +43,7 @@ const actions: ActionTree<UserState, StoreInterface> = {
     try {
       let item = (state.apps || []).find((item) => item.uid === uid);
       if (!item) {
-        item = await client.info(state.token, uid);
+        item = await lambdaAPI.info(state.token, uid);
       }
       commit('selectedApp', item);
     } catch (e) {

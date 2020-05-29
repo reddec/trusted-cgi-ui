@@ -1,13 +1,13 @@
 import {Module} from 'vuex';
-import {ProjectConfig, Record, Template} from "src/api/client";
+import {Settings, Record, Template} from "src/api/project_api";
 import {StoreInterface} from "src/store";
-import client from '../../api'
+import {lambdaAPI, projectAPI} from '../../api'
 
 interface State {
   templatesLoading: boolean
   templates: Array<Template>
   configLoading: boolean
-  config: ProjectConfig | undefined
+  config: Settings | undefined
   globalStats: Array<Record>
   globalStatsLoading: boolean
 }
@@ -29,7 +29,7 @@ const mod: Module<State, StoreInterface> = {
     templatesLoading(state, pending: boolean) {
       state.templatesLoading = pending
     },
-    config(state, config: ProjectConfig) {
+    config(state, config: Settings) {
       state.config = config
     },
     configLoading(state, pending: boolean) {
@@ -50,7 +50,7 @@ const mod: Module<State, StoreInterface> = {
       let token = rootState.user.token
       commit('templatesLoading', true)
       try {
-        const list = (await client.allTemplates(token) || []).sort((a, b) => a.name.localeCompare(b.name));
+        const list = (await projectAPI.allTemplates(token) || []).sort((a, b) => a.name.localeCompare(b.name));
         commit('templates', list)
         return true;
       } catch (e) {
@@ -67,7 +67,7 @@ const mod: Module<State, StoreInterface> = {
       let token = rootState.user.token
       commit('configLoading', true)
       try {
-        const cfg = await client.config(token)
+        const cfg = await projectAPI.config(token)
         commit('config', cfg)
         return true;
       } catch (e) {
@@ -81,7 +81,7 @@ const mod: Module<State, StoreInterface> = {
       let token = rootState.user.token
       commit('globalStatsLoading', true)
       try {
-        const cfg = await client.globalStats(token, 1000)
+        const cfg = await projectAPI.stats(token, 1000)
         commit('globalStats', cfg)
         return true;
       } catch (e) {

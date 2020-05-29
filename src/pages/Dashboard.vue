@@ -51,7 +51,7 @@
 <script>
   import Vue from 'vue';
   import {createNamespacedHelpers} from "vuex";
-  import client from '../api'
+  import {projectAPI} from '../api'
   import ProjectSettings from "../components/widgets/ProjectSettings";
   import UserSettings from "../components/widgets/UserSettings";
   import MinuteHitsStats from "../components/MinuteHitsStats";
@@ -76,7 +76,7 @@
       async create(template) {
         this.creating = true;
         try {
-          const app = await client.createFromTemplate(this.token, template.name)
+          const app = await projectAPI.createFromTemplate(this.token, template.name)
           this.$store.commit('user/updatedApp', app)
           this.$router.push({name: 'app', params: {'name': app.uid}})
         } finally {

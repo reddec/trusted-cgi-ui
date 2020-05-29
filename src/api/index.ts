@@ -1,5 +1,6 @@
-import {API} from './client'
-
+import {LambdaAPI} from "src/api/lambda_api";
+import {ProjectAPI} from "src/api/project_api";
+import {UserAPI} from "src/api/user_api";
 
 let baseUrl = process.env.API_URL;
 if (!baseUrl) {
@@ -10,4 +11,7 @@ if (!baseUrl) {
 }
 
 export const baseURL = baseUrl;
-export default new API(baseUrl + 'u/');
+export const apiURL = baseURL + 'u/'
+export const lambdaAPI = new LambdaAPI(apiURL);
+export const projectAPI = new ProjectAPI(apiURL);
+export const userAPI = new UserAPI(apiURL);

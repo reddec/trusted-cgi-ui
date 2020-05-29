@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import client from '../../api'
+  import {lambdaAPI} from '../../api'
 
   import {createNamespacedHelpers} from "vuex";
 
@@ -41,7 +41,7 @@
           maximum_payload: parseInt(this.payloadLimit || '0')
         })
         try {
-          let app = await client.update(this.token, this.selectedApp?.uid, cp);
+          let app = await lambdaAPI.update(this.token, this.selectedApp?.uid, cp);
           this.$store.commit('user/updatedApp', app);
           this.$store.commit('user/selectedApp', app);
           //this.$store.commit('user/selectedApp', app);

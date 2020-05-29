@@ -5,7 +5,7 @@
 
 <script>
   import MinuteHitsStats from "../MinuteHitsStats";
-  import client from '../../api';
+  import {lambdaAPI} from '../../api';
   import {createNamespacedHelpers} from "vuex";
 
   const {mapState, mapActions, mapGetters} = createNamespacedHelpers('user')
@@ -28,7 +28,7 @@
         this.loading = true;
         this.records = [];
         try {
-          this.records = await client.stats(this.token, this.selectedApp.uid, 200);
+          this.records = await lambdaAPI.stats(this.token, this.selectedApp.uid, 200);
         } catch (e) {
           console.error(e)
         } finally {

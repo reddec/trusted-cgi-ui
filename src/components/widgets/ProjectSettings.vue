@@ -28,7 +28,7 @@
 
   import Vue from 'vue';
   import {createNamespacedHelpers} from "vuex";
-  import client from '../../api'
+  import {projectAPI} from '../../api'
 
   const userMod = createNamespacedHelpers('user')
   const systemMod = createNamespacedHelpers('system')
@@ -48,7 +48,7 @@
       async save() {
         this.saving = true;
         try {
-          await client.apply(this.token, this.clone)
+          await projectAPI.setUser(this.token, this.clone.user)
           this.$store.commit('system/config', this.clone)
         } catch (e) {
           console.error(e)

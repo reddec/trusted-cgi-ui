@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import client from '../../api'
+  import {lambdaAPI} from '../../api'
 
   import {createNamespacedHelpers} from "vuex";
 
@@ -48,7 +48,7 @@
         this.invoking = true;
         this.result = '';
         try {
-          this.result = await client.invoke(this.token, this.selectedApp?.uid, name)
+          this.result = await lambdaAPI.invoke(this.token, this.selectedApp?.uid, name)
         } catch (e) {
           console.error(e)
         } finally {
@@ -58,7 +58,7 @@
       async reload() {
         this.loading = true;
         try {
-          this.actions = await client.actions(this.token, this.selectedApp?.uid)
+          this.actions = await lambdaAPI.actions(this.token, this.selectedApp?.uid)
         } catch (e) {
           console.error(e)
         } finally {

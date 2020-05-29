@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import client, {baseURL} from '../../api'
+  import {baseURL, lambdaAPI} from '../../api'
 
   import {createNamespacedHelpers} from "vuex";
   import Aliases from "./Aliases";
@@ -62,7 +62,7 @@
       async remove() {
         this.removing = true;
         try {
-          await client.remove(this.token, this.selectedApp?.uid)
+          await lambdaAPI.remove(this.token, this.selectedApp?.uid)
           this.$router.push({name: 'dashboard'})
           this.$store.commit('user/removedApp', this.selectedApp);
 
@@ -79,7 +79,7 @@
           description: this.description
         })
         try {
-          let app = await client.update(this.token, this.selectedApp?.uid, cp);
+          let app = await lambdaAPI.update(this.token, this.selectedApp?.uid, cp);
           this.$store.commit('user/updatedApp', app);
           this.$store.commit('user/selectedApp', app);
           this.closeEditor();

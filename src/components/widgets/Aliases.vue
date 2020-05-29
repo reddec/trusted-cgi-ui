@@ -44,7 +44,7 @@
 </template>
 
 <script>
-  import client, {baseURL} from '../../api'
+  import {baseURL, lambdaAPI} from '../../api'
 
   import {createNamespacedHelpers} from "vuex";
 
@@ -65,7 +65,7 @@
       async link() {
         this.newAlias.adding = true;
         try {
-          let app = await client.link(this.token, this.selectedApp?.uid, this.newAlias.alias);
+          let app = await lambdaAPI.link(this.token, this.selectedApp?.uid, this.newAlias.alias);
           this.$store.commit('user/updatedApp', app)
           this.$store.commit('user/selectedApp', app)
           this.newAlias.alias = '';
@@ -78,7 +78,7 @@
       async unlink(alias) {
         this.deleting = true;
         try {
-          let app = await client.unlink(this.token, alias);
+          let app = await lambdaAPI.unlink(this.token, alias);
           this.$store.commit('user/updatedApp', app)
           this.$store.commit('user/selectedApp', app)
         } catch (e) {

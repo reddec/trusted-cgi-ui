@@ -65,7 +65,6 @@
 </template>
 
 <script>
-  import client from '../api'
   import {baseURL} from "../api";
   import FileBrowser from "../components/widgets/FileBrowser";
   import FileEditor from "../components/widgets/FileEditor";

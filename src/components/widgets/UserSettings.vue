@@ -23,7 +23,7 @@
 
   import Vue from 'vue';
   import {createNamespacedHelpers} from "vuex";
-  import client from '../../api'
+  import {userAPI} from '../../api'
 
   const userMod = createNamespacedHelpers('user')
   const systemMod = createNamespacedHelpers('system')
@@ -42,7 +42,7 @@
       async changePassword() {
         this.changingPassword = true;
         try {
-          await client.changePassword(this.token, this.password)
+          await userAPI.changePassword(this.token, this.password)
           this.password = ''
         } catch (e) {
           console.error(e)

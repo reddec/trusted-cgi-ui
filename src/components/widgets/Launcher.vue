@@ -77,7 +77,7 @@
 </template>
 
 <script>
-  import client from '../../api'
+  import {lambdaAPI} from '../../api'
 
   import {createNamespacedHelpers} from "vuex";
 
@@ -105,7 +105,7 @@
         this.saving = true;
         let cp = Object.assign({}, this.selectedApp?.manifest, this.clone)
         try {
-          let app = await client.update(this.token, this.selectedApp?.uid, cp);
+          let app = await lambdaAPI.update(this.token, this.selectedApp?.uid, cp);
           this.$store.commit('user/updatedApp', app);
           this.$store.commit('user/selectedApp', app);
         } catch (e) {
@@ -163,11 +163,6 @@
     }
   }
 
-  function uuidv4() {
-    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    );
-  }
 </script>
 
 <style scoped>

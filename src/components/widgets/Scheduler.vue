@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import client, {baseURL} from '../../api'
+  import {lambdaAPI, baseURL} from '../../api'
 
   import {createNamespacedHelpers} from "vuex";
 
@@ -66,7 +66,7 @@
         this.$set(this, 'clone', JSON.parse(JSON.stringify(this.selectedApp?.manifest)))
         this.loading = true;
         try {
-          this.actions = await client.actions(this.token, this.selectedApp?.uid)
+          this.actions = await lambdaAPI.actions(this.token, this.selectedApp?.uid)
         } catch (e) {
           console.error(e)
         } finally {
@@ -77,7 +77,7 @@
         this.saving = true;
         let cp = Object.assign({}, this.selectedApp?.manifest, this.clone)
         try {
-          let app = await client.update(this.token, this.selectedApp?.uid, cp);
+          let app = await lambdaAPI.update(this.token, this.selectedApp?.uid, cp);
           this.$store.commit('user/updatedApp', app);
           this.$store.commit('user/selectedApp', app);
         } catch (e) {
