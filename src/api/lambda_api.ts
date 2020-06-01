@@ -40,9 +40,9 @@ export interface Manifest {
     allowed_origin: JsonStringSet | null
     public: boolean
     tokens: any | null
-    post_clone: string | null
     aliases: JsonStringSet | null
     cron: Array<Schedule> | null
+    static: string | null
 }
 
 export type JsonDuration = string; // suffixes: ns, us, ms, s, m, h
@@ -208,7 +208,7 @@ class postExecutor {
 }
 
 /**
-optional public RSA key for SSH
+API for lambdas
 **/
 export class LambdaAPI {
 

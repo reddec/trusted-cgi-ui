@@ -1,6 +1,23 @@
 <template>
   <div>
     <q-card flat>
+      <q-card-section>
+        <q-select :value="clone.static"
+                  label="Directory for static files"
+                  use-input
+                  fill-input
+                  hide-selected
+                  input-debounce="0"
+                  :options="staticDirs"
+                  @filter="filterFolder"
+                  @input-value="(v) => clone.static = v"
+                  hide-hint
+                  hint="GET and HEAD methods will be disabled for manual processing; leave it empty to disable"
+        />
+      </q-card-section>
+    </q-card>
+    <br/>
+    <q-card flat>
       <q-list bordered>
         <q-item-label header>Input headers mapping</q-item-label>
         <q-item v-for="[header, env] in inputHeaders" :key="header">
@@ -78,7 +95,6 @@
     </q-card>
 
 
-
     <q-dialog v-model="newInput.dialog" persistent>
       <q-card style="min-width: 350px">
         <q-card-section>
@@ -120,7 +136,7 @@
         <q-card-section class="q-pt-none">
           <q-input v-model="newQuery.param" autofocus hint="request query or form param"/>
           <br/>
-          <q-input dense v-model="newQuery.env"  hint="environment variable"/>
+          <q-input dense v-model="newQuery.env" hint="environment variable"/>
           <q-btn flat size="sm" dense @click="()=>newQuery.env = (to_upper_snake(newQuery.param) )">
             suggested: {{to_upper_snake(newQuery.param)}}
           </q-btn>
@@ -185,6 +201,8 @@
         saving: false,
         clone: {},
         availableHeaders: knownHeaders,
+        availableFolders: [],
+        staticDirs: [],
         newInput: {
           dialog: false,
           header: '',
@@ -250,8 +268,10 @@
         this.newQuery.env = '';
       },
 
-      updateFields() {
+      async updateFields() {
         this.$set(this, 'clone', JSON.parse(JSON.stringify(this.selectedApp?.manifest)))
+        const list = await lambdaAPI.files(this.token, this.selectedApp?.uid, "");
+        this.availableFolders = list.filter(x => x.is_dir).map(x => x.name)
       },
       to_upper_snake(text) {
         return text.split('-').join("_").toUpperCase()
@@ -260,6 +280,12 @@
         update(() => {
           const nd = val.toLocaleLowerCase();
           this.availableHeaders = knownHeaders.filter(v => v.toLocaleLowerCase().indexOf(nd) !== -1)
+        })
+      },
+      filterFolder(val, update, abort) {
+        update(() => {
+          const nd = val.toLocaleLowerCase();
+          this.staticDirs = this.availableFolders.filter(v => v.toLocaleLowerCase().indexOf(nd) !== -1)
         })
       },
     },
@@ -276,6 +302,7 @@
       inputHeaders() {
         return Object.entries(this.clone.input_headers || {})
       },
+
       outputHeaders() {
         return Object.entries(this.clone.output_headers || {})
       },
