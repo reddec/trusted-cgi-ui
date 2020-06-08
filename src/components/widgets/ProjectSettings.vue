@@ -58,7 +58,7 @@
         }
       },
       setSettings() {
-        this.clone = Object.assign({}, this.config)
+        this.$set(this, 'clone', Object.assign({}, this.config))
       }
     },
     watch: {
