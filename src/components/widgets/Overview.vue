@@ -39,7 +39,7 @@
           <Aliases/>
         </q-tab-panel>
         <q-tab-panel name="develop">
-          <h4>Using web UI</h4>
+          <p class="text-h4">Using web UI</p>
           Open file editor (files tab)
           <h4>Using cgi-ctl command</h4>
           <p>
