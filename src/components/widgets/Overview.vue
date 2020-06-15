@@ -1,32 +1,77 @@
 <template>
-  <div>
-    <q-card flat>
-      <div v-if="!edit">
-        <q-card-section>
-          <div class="text-h6">{{selectedApp.manifest.name || selectedApp.uid}}</div>
-        </q-card-section>
-        <q-separator/>
-        <q-card-section>
-          <q-markdown :src="selectedApp.manifest.description"/>
-        </q-card-section>
-      </div>
-      <div v-else>
-        <q-input label="Name" filled v-model="name"/>
-        <br/>
-        <q-input autogrow style="min-height: 300px" filled type="textarea" label="Description" hint="Markdown supported"
-                 v-model="description"/>
-      </div>
-      <q-card-actions align="right">
-        <q-btn flat color="green" icon="edit" v-if="!edit" @click="openEditor()">Edit</q-btn>
-        <q-btn flat color="primary" icon="save" v-if="edit" :loading="saving" @click="save()">Save</q-btn>
-        <q-btn flat icon="clear" v-if="edit && !saving" @click="closeEditor()">Cancel</q-btn>
+  <div class="row">
+    <div class="xl-hide lg-hide md-hide col-sm-12 col-xs-12">
+      <q-tabs
+        v-model="selection"
+        class="text-primary"
+      >
+        <q-tab name="doc" icon="help" label="Readme"/>
+        <q-tab name="endpoint" icon="input" label="Endpoint"/>
+        <q-tab name="develop" icon="code" label="Develop"/>
+        <q-tab name="danger" icon="warning" label="Danger" class="text-red-4"/>
+      </q-tabs>
+    </div>
+    <div class="col-md-shrink sm-hide xs-hide">
+      <q-tabs
+        v-model="selection"
+        vertical
+        class="text-primary"
+      >
+        <q-tab name="doc" icon="help" label="Readme"/>
+        <q-tab name="endpoint" icon="input" label="Endpoint"/>
+        <q-tab name="develop" icon="code" label="Develop"/>
+        <q-tab name="danger" icon="warning" label="Danger" class="text-red-4"/>
+      </q-tabs>
+    </div>
+    <div class="col-md-grow col-sm-12 col-xs-12">
+      <q-tab-panels
+        v-model="selection"
+        animated
+        swipeable
+        vertical
+        transition-prev="jump-up"
+        transition-next="jump-up"
+      >
+        <q-tab-panel name="doc">
+          <Readme/>
+        </q-tab-panel>
+        <q-tab-panel name="endpoint">
+          <Aliases/>
+        </q-tab-panel>
+        <q-tab-panel name="develop">
+          <h4>Using web UI</h4>
+          Open file editor (files tab)
+          <h4>Using cgi-ctl command</h4>
+          <p>
+            cgi-ctl utility included in the <a href="https://trusted-cgi.reddec.net/installation">distribution</a>
+          </p>
+          <h5>Download project (choose suitable method)</h5>
+          <ul>
+            <li>
+              as archive<br/>
+              <code>cgi-ctl download -i {{selectedApp.uid}} --url {{baseURL}} -P</code>
+              will be save to {{selectedApp.uid}}.tar.gz
+            </li>
+            <li>
+              as unpacked archive<br/>
+              <code>
+                cgi-ctl download -i {{selectedApp.uid}} --url {{baseURL}} -P -o - | tar zxf -
+              </code>
+              content of lambda will be unpacked to the current directory
+            </li>
+          </ul>
+          <h5>Upload changes (choose suitable method)</h5>
+          <p>TBD</p>
+        </q-tab-panel>
+        <q-tab-panel name="danger">
+          <q-btn flat color="red" icon="delete" @click="remove()" :loading="removing">Remove app</q-btn>
+        </q-tab-panel>
 
-        <q-space/>
-        <q-btn flat color="red" icon="delete" @click="remove()" :loading="removing">Remove app</q-btn>
-      </q-card-actions>
-    </q-card>
+      </q-tab-panels>
+    </div>
 
   </div>
+
 </template>
 
 <script>
@@ -34,31 +79,21 @@
 
   import {createNamespacedHelpers} from "vuex";
   import Aliases from "./Aliases";
+  import Readme from "./Readme";
 
   const {mapState, mapActions, mapGetters} = createNamespacedHelpers('user')
 
 
   export default {
     name: "Overview",
-    components: {Aliases},
+    components: {Readme, Aliases},
     data() {
       return {
-        saving: false,
+        selection: 'doc',
         removing: false,
-        edit: false,
-        name: '',
-        description: '',
       }
     },
     methods: {
-      openEditor() {
-        this.name = this.selectedApp?.manifest.name
-        this.description = this.selectedApp?.manifest.description;
-        this.edit = true;
-      },
-      closeEditor() {
-        this.edit = false;
-      },
       async remove() {
         this.removing = true;
         try {
@@ -72,25 +107,11 @@
           this.removing = false;
         }
       },
-      async save() {
-        this.saving = true;
-        let cp = Object.assign({}, this.selectedApp?.manifest, {
-          name: this.name,
-          description: this.description
-        })
-        try {
-          let app = await lambdaAPI.update(this.token, this.selectedApp?.uid, cp);
-          this.$store.commit('user/updatedApp', app);
-          this.$store.commit('user/selectedApp', app);
-          this.closeEditor();
-        } catch (e) {
-          console.error(e)
-        } finally {
-          this.saving = false
-        }
-      }
     },
     computed: {
+      baseURL() {
+        return baseURL
+      },
       ...mapState([
         'selectedApp',
         'token'
@@ -100,5 +121,14 @@
 </script>
 
 <style scoped>
-
+  code {
+    overflow-x: auto;
+    display: block;
+    padding: 1em;
+    font-family: monospace;
+    border: darkgrey 1px solid;
+    border-radius: 0.3em;
+    background-color: black;
+    color: white;
+  }
 </style>

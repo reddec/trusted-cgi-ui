@@ -1,5 +1,5 @@
 <template>
-  <q-list dense>
+  <q-list>
     <q-item>
       <q-item-section>
         <q-item-label overline>default</q-item-label>
