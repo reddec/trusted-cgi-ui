@@ -43,7 +43,7 @@
           Open file editor (files tab)
           <h4>Using cgi-ctl command</h4>
           <p>
-            cgi-ctl utility included in the <a href="https://trusted-cgi.reddec.net/installation">distribution</a>
+            cgi-ctl utility included in the <a target="_blank" href="https://trusted-cgi.reddec.net/cgi_ctl">distribution</a>
           </p>
           <h5>Download project (choose suitable method)</h5>
           <ul>
@@ -61,7 +61,15 @@
             </li>
           </ul>
           <h5>Upload changes (choose suitable method)</h5>
-          <p>TBD</p>
+          <ul>
+            <li>
+              from unpacked archive<br/>
+              <code>
+                cgi-ctl upload -o {{selectedApp.uid}} --url {{baseURL}} -P
+              </code>
+              content of lambda will be uploaded to the lambda
+            </li>
+          </ul>
         </q-tab-panel>
         <q-tab-panel name="danger">
           <q-btn flat color="red" icon="delete" @click="remove()" :loading="removing">Remove app</q-btn>
