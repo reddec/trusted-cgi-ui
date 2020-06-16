@@ -43,7 +43,7 @@
           Open file editor (files tab)
           <h4>Using cgi-ctl command</h4>
           <p>
-            cgi-ctl utility included in the <a target="_blank" href="https://trusted-cgi.reddec.net/cgi_ctl">distribution</a>
+            cgi-ctl utility included in the <a target="_blank" href="https://trusted-cgi.reddec.net/cgi-ctl">distribution</a>
           </p>
           <p class="text-h5">Clone content</p>
 
