@@ -45,31 +45,25 @@
           <p>
             cgi-ctl utility included in the <a target="_blank" href="https://trusted-cgi.reddec.net/cgi_ctl">distribution</a>
           </p>
-          <h5>Download project (choose suitable method)</h5>
-          <ul>
-            <li>
-              as archive<br/>
-              <code>cgi-ctl download -i {{selectedApp.uid}} --url {{baseURL}} -P</code>
-              will be save to {{selectedApp.uid}}.tar.gz
-            </li>
-            <li>
-              as unpacked archive<br/>
+          <p class="text-h5">Clone content</p>
+
+          <code>cgi-ctl clone -i {{selectedApp.uid}} --url {{baseURL}} -P</code>
+          <p>will be save to {{selectedApp.uid}} directory</p>
+          <p class="text-h5">Upload changes</p>
+          <small>from cloned directory</small>
+          <code>
+            cgi-ctl upload
+          </code>
+          <with-actions>
+            <template v-slot:default="props">
+              <br/>
+              <p class="text-h5">(optional) Invoke actions</p>
+              <small>from cloned directory</small>
               <code>
-                cgi-ctl download -i {{selectedApp.uid}} --url {{baseURL}} -P -o - | tar zxf -
+                cgi-ctl do [{{props.actions.join("|")}}]
               </code>
-              content of lambda will be unpacked to the current directory
-            </li>
-          </ul>
-          <h5>Upload changes (choose suitable method)</h5>
-          <ul>
-            <li>
-              from unpacked archive<br/>
-              <code>
-                cgi-ctl upload -o {{selectedApp.uid}} --url {{baseURL}} -P
-              </code>
-              content of lambda will be uploaded to the lambda
-            </li>
-          </ul>
+            </template>
+          </with-actions>
         </q-tab-panel>
         <q-tab-panel name="danger">
           <q-btn flat color="red" icon="delete" @click="remove()" :loading="removing">Remove app</q-btn>
@@ -88,13 +82,14 @@
   import {createNamespacedHelpers} from "vuex";
   import Aliases from "./Aliases";
   import Readme from "./Readme";
+  import WithActions from "./WithActions";
 
   const {mapState, mapActions, mapGetters} = createNamespacedHelpers('user')
 
 
   export default {
     name: "Overview",
-    components: {Readme, Aliases},
+    components: {WithActions, Readme, Aliases},
     data() {
       return {
         selection: 'doc',
