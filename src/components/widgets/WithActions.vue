@@ -3,11 +3,7 @@
     <slot name="loading" v-if="loading">
       <q-linear-progress indeterminate/>
     </slot>
-    <slot name="notFound" v-else-if="!actions || actions.length === 0">
-      <h5>
-        actions not found
-      </h5>
-    </slot>
+    <slot name="notFound" v-else-if="!actions || actions.length === 0"></slot>
     <slot name="default" v-bind:actions="actions" v-else>
 
     </slot>
