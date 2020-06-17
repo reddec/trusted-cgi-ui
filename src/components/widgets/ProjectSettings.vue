@@ -42,6 +42,7 @@
       }
     },
     beforeMount() {
+      this.setSettings()
       this.$store.dispatch('system/config')
     },
     methods: {
