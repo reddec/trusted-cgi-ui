@@ -23,6 +23,20 @@
               <q-btn icon="refresh" :loading="templatesLoading" @click="reloadTemplates(true)" flat dense round/>
             </q-item-section>
           </q-item>
+          <q-item>
+            <q-item-section>
+              <q-item-label>
+                Default
+              </q-item-label>
+              <q-item-label caption>Bare minimal default template</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-btn icon="file_copy"
+                     flat dense round
+                     :loading="creating"
+                     @click="create()"/>
+            </q-item-section>
+          </q-item>
           <q-item v-for="(template, index) in templates" :key="index">
             <q-item-section>
               <q-item-label>
@@ -75,7 +89,12 @@
       async create(template) {
         this.creating = true;
         try {
-          const app = await projectAPI.createFromTemplate(this.token, template.name)
+          let app;
+          if (template) {
+            app = await projectAPI.createFromTemplate(this.token, template.name)
+          } else {
+            app = await projectAPI.create(this.token)
+          }
           this.$store.commit('user/updatedApp', app)
           this.$router.push({name: 'app', params: {'name': app.uid}})
         } catch (e) {
