@@ -53,8 +53,17 @@
                      :disable="!template.available"/>
             </q-item-section>
           </q-item>
+          <q-item>
+            <q-item-section >
+              <q-item-label caption>
+                Using cgi-ctl utility included in the <a target="_blank" href="https://trusted-cgi.reddec.net/cgi-ctl">distribution</a>
+              </q-item-label>
+              <q-item-label>
+                <code class="neat-code">cgi-ctl create --url {{baseURL}} &lt;name&gt;</code>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
         </q-list>
-
       </div>
       <div class="col-md col-sm-12 col-xs-12">
         <MinuteHitsStats :records="globalStats" :bordered="true"/>
@@ -66,7 +75,7 @@
 <script>
   import Vue from 'vue';
   import {createNamespacedHelpers} from "vuex";
-  import {projectAPI} from '../api'
+  import {baseURL, projectAPI} from '../api'
   import MinuteHitsStats from "../components/MinuteHitsStats";
 
   const userMod = createNamespacedHelpers('user')
@@ -133,7 +142,10 @@
         'templates',
         'globalStats',
         'globalStatsLoading'
-      ])
+      ]),
+      baseURL(){
+        return baseURL
+      }
     }
   });
 </script>

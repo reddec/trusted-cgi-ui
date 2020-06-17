@@ -47,11 +47,11 @@
           </p>
           <p class="text-h5">Clone content</p>
 
-          <code>cgi-ctl clone -i {{selectedApp.uid}} --url {{baseURL}} -P</code>
+          <code class="neat-code">cgi-ctl clone -i {{selectedApp.uid}} --url {{baseURL}} -P</code>
           <p>will be save to {{selectedApp.uid}} directory</p>
           <p class="text-h5">Upload changes</p>
           <small>from cloned directory</small>
-          <code>
+          <code  class="neat-code">
             cgi-ctl upload
           </code>
           <with-actions>
@@ -59,7 +59,10 @@
               <br/>
               <p class="text-h5">(optional) Invoke actions</p>
               <small>from cloned directory</small>
-              <code>
+              <code class="neat-code" v-if="props.actions.length === 1">
+                cgi-ctl do {{props.actions[0]}}
+              </code>
+              <code class="neat-code" v-else>
                 cgi-ctl do [{{props.actions.join("|")}}]
               </code>
             </template>
@@ -123,15 +126,4 @@
   }
 </script>
 
-<style scoped>
-  code {
-    overflow-x: auto;
-    display: block;
-    padding: 1em;
-    font-family: monospace;
-    border: darkgrey 1px solid;
-    border-radius: 0.3em;
-    background-color: black;
-    color: white;
-  }
-</style>
+
