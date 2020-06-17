@@ -47,7 +47,7 @@
           </p>
           <p class="text-h5">Clone content</p>
 
-          <code class="neat-code">cgi-ctl clone -i {{selectedApp.uid}} --url {{baseURL}} -P</code>
+          <code class="neat-code">cgi-ctl clone --uid {{selectedApp.uid}} --url {{baseURL}} -P</code>
           <p>will be save to {{selectedApp.uid}} directory</p>
           <p class="text-h5">Upload changes</p>
           <small>from cloned directory</small>
