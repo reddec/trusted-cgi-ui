@@ -6,7 +6,7 @@
         <q-item-label caption>{{ api }}</q-item-label>
       </q-item-section>
     </q-item>
-    <q-item v-for="name in selectedApp.manifest.aliases" :key="name">
+    <q-item v-for="name in selectedApp.aliases" :key="name">
       <q-item-section>
         <q-item-label overline>{{name}}</q-item-label>
         <q-item-label caption>{{baseURL}}l/{{name}}</q-item-label>
