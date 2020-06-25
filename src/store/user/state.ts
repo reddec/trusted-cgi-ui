@@ -1,11 +1,11 @@
-import {App} from "src/api/project_api";
+import {Definition} from "src/api/project_api";
 
 export interface UserState {
   token: string;
   logging: boolean;
-  apps: App[];
+  apps: Definition[];
   appsLoading: boolean;
-  selectedApp: App | undefined;
+  selectedApp: Definition | undefined;
   loadingApp: boolean;
 }
 
