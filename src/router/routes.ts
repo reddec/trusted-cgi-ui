@@ -21,6 +21,12 @@ const routes: RouteConfig[] = [
         props: true,
         name: 'app',
         component: () => import('pages/App.vue')
+      },
+      {
+        path: '/queues',
+        props: true,
+        name: 'queues',
+        component: () => import('pages/Queues.vue')
       }
     ]
   }

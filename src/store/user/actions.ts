@@ -32,6 +32,13 @@ const actions: ActionTree<UserState, StoreInterface> = {
     return false;
   },
 
+  async reLoadApps({commit, state, dispatch}, force = false) {
+    if (state.apps && state.apps.length > 0 && !force) {
+      return true;
+    }
+    return dispatch('loadApps')
+  },
+
   async logout({commit}) {
     commit('token', '')
   },

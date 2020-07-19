@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 import {UserState} from "src/store/user/state";
 import user from './user';
 import system from './system';
+import queues from './queues';
 
 export interface StoreInterface {
   user: UserState;
@@ -16,7 +17,8 @@ export default store(function ({Vue}) {
   const Store = new Vuex.Store<StoreInterface>({
     modules: {
       user,
-      system
+      system,
+      queues
     },
 
     // enable strict mode (adds overhead!)

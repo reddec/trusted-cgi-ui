@@ -54,6 +54,16 @@
             </q-item-label>
           </q-item-section>
         </q-item>
+        <q-item clickable :to="{name:'queues'}">
+          <q-item-section avatar>
+            <q-icon name="queue"/>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>
+              Queues
+            </q-item-label>
+          </q-item-section>
+        </q-item>
         <q-item>
           <q-item-section>
             <q-item-label caption>
