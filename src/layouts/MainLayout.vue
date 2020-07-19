@@ -44,16 +44,6 @@
             </q-item-label>
           </q-item-section>
         </q-item>
-        <q-item clickable :to="{name:'settings'}">
-          <q-item-section avatar>
-            <q-icon name="settings"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>
-              Settings
-            </q-item-label>
-          </q-item-section>
-        </q-item>
         <q-item clickable :to="{name:'queues'}">
           <q-item-section avatar>
             <q-icon name="queue"/>
@@ -61,6 +51,16 @@
           <q-item-section>
             <q-item-label>
               Queues
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item clickable :to="{name:'settings'}">
+          <q-item-section avatar>
+            <q-icon name="settings"/>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>
+              Settings
             </q-item-label>
           </q-item-section>
         </q-item>
