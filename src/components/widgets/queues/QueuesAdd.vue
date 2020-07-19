@@ -21,8 +21,9 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <slot>
-      <q-icon name="add" :loading="creating"></q-icon>
+    <q-circular-progress indeterminate v-if="creating"/>
+    <slot v-else>
+      <q-icon name="add"></q-icon>
     </slot>
   </div>
 </template>

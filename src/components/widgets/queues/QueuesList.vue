@@ -27,6 +27,9 @@
           <queues-remove :name="queue.name">
             <q-btn class="gt-xs" size="12px" flat dense round icon="delete"/>
           </queues-remove>
+          <queues-assign :name="queue.name" :lambda="queue.target">
+            <q-btn class="gt-xs" size="12px" flat dense round icon="forward"/>
+          </queues-assign>
           <q-btn class="gt-xs" size="12px" flat dense round icon="dashboard"
                  :to="{name:'app', params:{name:queue.target}}"/>
         </div>
@@ -39,11 +42,12 @@
   import {createNamespacedHelpers} from "vuex";
   import QueuesRemove from "./QueuesRemove";
   import QueuesAdd from "./QueuesAdd";
+  import QueuesAssign from "./QueuesAssign";
 
   const {mapState, mapActions, mapGetters} = createNamespacedHelpers('queues')
   export default {
     name: "QueuesList",
-    components: {QueuesAdd, QueuesRemove},
+    components: {QueuesAssign, QueuesAdd, QueuesRemove},
     data() {
       return {
         filter: '',

@@ -27,6 +27,10 @@ const mod: Module<State, StoreInterface> = {
     },
     removed(state, name: string) {
       state.queues = [...state.queues.filter((q) => q.name !== name)]
+    },
+    assigned(state, queue: Queue) {
+      let idx = state.queues.findIndex((q) => q.name === queue.name)
+      state.queues = [...state.queues.slice(0, idx), queue, ...state.queues.slice(idx + 1)]
     }
   },
   actions: {
@@ -58,6 +62,11 @@ const mod: Module<State, StoreInterface> = {
       let token = rootState.user.token
       await queuesAPI.remove(token, name)
       commit('removed', name);
+    },
+    async assign({state, rootState, commit}, {name, lambda}) {
+      let token = rootState.user.token
+      await queuesAPI.assign(token, name, lambda)
+      commit('assigned', {name: name, target: lambda});
     },
   }
 }
