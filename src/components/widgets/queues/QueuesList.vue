@@ -28,6 +28,7 @@
       </q-item-section>
       <q-item-section top side>
         <div class="text-grey-8 q-gutter-xs">
+          {{queue.retry}} / {{queue.interval}}
           <queues-remove :name="queue.name">
             <q-btn class="gt-xs" size="12px" flat dense round icon="delete"/>
           </queues-remove>

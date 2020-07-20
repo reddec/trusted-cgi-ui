@@ -31,6 +31,9 @@ const mod: Module<State, StoreInterface> = {
     assigned(state, queue: Queue) {
       let idx = state.queues.findIndex((q) => q.name === queue.name)
       state.queues = [...state.queues.slice(0, idx), queue, ...state.queues.slice(idx + 1)]
+    },
+    lambdaRemoved(state, lambda: string) {
+      state.queues = [...state.queues.filter((q) => q.target !== lambda)]
     }
   },
   actions: {
@@ -52,9 +55,9 @@ const mod: Module<State, StoreInterface> = {
       }
     },
 
-    async create({state, rootState, commit}, {name, lambda}) {
+    async create({state, rootState, commit}, queue: Queue) {
       let token = rootState.user.token
-      const q = await queuesAPI.create(token, name, lambda)
+      const q = await queuesAPI.create(token, queue)
       commit('created', q);
       return q;
     },

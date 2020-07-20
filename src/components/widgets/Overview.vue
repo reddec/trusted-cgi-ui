@@ -126,6 +126,7 @@
         try {
           await lambdaAPI.remove(this.token, this.selectedApp?.uid)
           this.$router.push({name: 'dashboard'})
+          this.$store.commit('queues/lambdaRemoved', this.selectedApp.uid)
           this.$store.commit('user/removedApp', this.selectedApp);
 
         } catch (e) {

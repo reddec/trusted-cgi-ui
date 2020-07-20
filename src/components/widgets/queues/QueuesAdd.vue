@@ -9,6 +9,10 @@
         <q-card-section class="q-pt-none">
           <q-input dense v-model="name" autofocus label="Queue name"/>
           <br/>
+          <q-input dense v-model="retry" label="Retry attempts"/>
+          <br/>
+          <q-input dense v-model="interval" label="Delay between attempts"/>
+          <br/>
           <div v-if="!targetLocked">
             <q-input dense v-model="lambda" :disable="targetLocked" label="Target lambda"/>
             <q-scroll-area style="height: 200px">
@@ -19,7 +23,7 @@
 
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Cancel" v-close-popup/>
-          <q-btn flat label="Add" :loading="creating" @click="doCreate"/>
+          <q-btn flat label="Add" v-if="lambda" :loading="creating" @click="doCreate"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -56,6 +60,8 @@
         name: this.defaultName,
         lambda: this.target,
         creating: false,
+        retry: 3,
+        interval: '5s',
         lambdas: [],
       }
     },
@@ -69,7 +75,13 @@
       async doCreate() {
         this.creating = true;
         try {
-          await this.create({name: this.name, lambda: this.lambda})
+          await this.create(
+            {
+              name: this.name,
+              target: this.lambda,
+              retry: parseInt(this.retry),
+              interval: this.interval
+            })
           this.name = '';
           if (!this.targetLocked) {
             this.lambda = '';
