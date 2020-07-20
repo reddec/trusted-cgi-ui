@@ -1,5 +1,27 @@
 <template>
   <q-list>
+    <q-item-section>
+      <q-item-label header>
+        <q-linear-progress indeterminate v-if="newAlias.adding"/>
+        <q-btn flat icon="add"  @click="newAlias.dialog = true" v-else>add alias</q-btn>
+        <q-dialog v-model="newAlias.dialog" persistent>
+          <q-card style="min-width: 350px">
+            <q-card-section>
+              <div class="text-h6">New alias</div>
+            </q-card-section>
+
+            <q-card-section class="q-pt-none">
+              <q-input v-model="newAlias.alias" autofocus label="Unique path" :hint="baseURL + 'l/'+newAlias.alias"/>
+            </q-card-section>
+
+            <q-card-actions align="right" class="text-primary">
+              <q-btn flat label="Cancel" v-close-popup/>
+              <q-btn flat label="Link" v-close-popup @click="link"/>
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+      </q-item-label>
+    </q-item-section>
     <q-item>
       <q-item-section>
         <q-item-label overline>default</q-item-label>
@@ -14,31 +36,6 @@
       <q-item-section side>
         <q-btn icon="delete" :loading="deleting" @click="unlink(name)" flat dense round/>
       </q-item-section>
-    </q-item>
-    <q-item clickable v-ripple @click="newAlias.dialog = true">
-      <q-item-section avatar>
-        <q-icon name="add"/>
-      </q-item-section>
-      <q-item-section>
-        <q-linear-progress indeterminate v-if="newAlias.adding"/>
-        <q-item-label  v-else>add alias</q-item-label>
-      </q-item-section>
-      <q-dialog v-model="newAlias.dialog" persistent>
-        <q-card style="min-width: 350px">
-          <q-card-section>
-            <div class="text-h6">New alias</div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <q-input v-model="newAlias.alias" autofocus label="Unique path" :hint="baseURL + 'l/'+newAlias.alias"/>
-          </q-card-section>
-
-          <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Cancel" v-close-popup/>
-            <q-btn flat label="Link" v-close-popup @click="link"/>
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
     </q-item>
   </q-list>
 </template>

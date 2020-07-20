@@ -36,7 +36,26 @@
           <Readme/>
         </q-tab-panel>
         <q-tab-panel name="endpoint">
-          <Aliases/>
+          <q-card>
+            <q-card-section>
+              <Aliases/>
+            </q-card-section>
+          </q-card>
+          <br/>
+          <q-card>
+            <q-card-section>
+              <queues-list :lambda="selectedApp.uid" no-lambda-link>
+                <template v-slot:default>
+                  <queues-add target-locked :target="selectedApp.uid">
+                    <q-btn flat icon="add">add queue</q-btn>
+                  </queues-add>
+                </template>
+                <template v-slot:hint="props">
+                  {{baseURL}}q/{{props.queue.name}}
+                </template>
+              </queues-list>
+            </q-card-section>
+          </q-card>
         </q-tab-panel>
         <q-tab-panel name="develop">
           <p class="text-h4">Using web UI</p>
@@ -51,7 +70,7 @@
           <p>will be save to {{selectedApp.uid}} directory</p>
           <p class="text-h5">Upload changes</p>
           <small>from cloned directory</small>
-          <code  class="neat-code">
+          <code class="neat-code">
             cgi-ctl upload
           </code>
           <with-actions>
@@ -86,13 +105,15 @@
   import Aliases from "./Aliases";
   import Readme from "./Readme";
   import WithActions from "./WithActions";
+  import QueuesList from "./queues/QueuesList";
+  import QueuesAdd from "./queues/QueuesAdd";
 
   const {mapState, mapActions, mapGetters} = createNamespacedHelpers('user')
 
 
   export default {
     name: "Overview",
-    components: {WithActions, Readme, Aliases},
+    components: {QueuesAdd, QueuesList, WithActions, Readme, Aliases},
     data() {
       return {
         selection: 'doc',

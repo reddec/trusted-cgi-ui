@@ -9,10 +9,12 @@
         <q-card-section class="q-pt-none">
           <q-input dense v-model="name" autofocus label="Queue name"/>
           <br/>
-          <q-input dense v-model="lambda" :disable="targetLocked" label="Target lambda"/>
-          <q-scroll-area style="height: 200px">
-            <lambdas-list :filter="lambda" @click="(app) => lambda = app.uid"/>
-          </q-scroll-area>
+          <div v-if="!targetLocked">
+            <q-input dense v-model="lambda" :disable="targetLocked" label="Target lambda"/>
+            <q-scroll-area style="height: 200px">
+              <lambdas-list :filter="lambda" @click="(app) => lambda = app.uid"/>
+            </q-scroll-area>
+          </div>
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">

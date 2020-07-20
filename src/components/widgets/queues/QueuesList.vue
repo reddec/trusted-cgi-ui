@@ -2,24 +2,28 @@
   <q-list>
     <q-item-section>
       <q-item-label header>
-        <q-input v-model="filter" label="queue or lambda name">
-          <template v-slot:before>
-            <q-icon name="search" />
-          </template>
+        <slot>
+          <q-input v-model="filter" label="queue or lambda name">
+            <template v-slot:before>
+              <q-icon name="search"/>
+            </template>
 
-          <template v-slot:after>
-            <queues-add :default-name="filter">
-              <q-btn round dense flat icon="add" />
-            </queues-add>
-          </template>
-        </q-input>
+            <template v-slot:after>
+              <queues-add :default-name="filter">
+                <q-btn round dense flat icon="add"/>
+              </queues-add>
+            </template>
+          </q-input>
+        </slot>
       </q-item-label>
     </q-item-section>
     <q-item v-for="queue in filteredQueues" :key="queue.name">
       <q-item-section>
         <q-item-label overline>{{queue.name}}</q-item-label>
         <q-item-label caption>
-          {{ queue.target }}
+          <slot name="hint" v-bind:queue="queue">
+            -> {{ queue.target }}
+          </slot>
         </q-item-label>
       </q-item-section>
       <q-item-section top side>
@@ -30,7 +34,8 @@
           <queues-assign :name="queue.name" :lambda="queue.target">
             <q-btn class="gt-xs" size="12px" flat dense round icon="forward"/>
           </queues-assign>
-          <q-btn class="gt-xs" size="12px" flat dense round icon="dashboard"
+          <q-btn v-if="!noLambdaLink"
+                 class="gt-xs" size="12px" flat dense round icon="dashboard"
                  :to="{name:'app', params:{name:queue.target}}"/>
         </div>
       </q-item-section>
@@ -48,6 +53,12 @@
   export default {
     name: "QueuesList",
     components: {QueuesAssign, QueuesAdd, QueuesRemove},
+    props: {
+      'lambda': {},
+      noLambdaLink: {
+        type: Boolean
+      }
+    },
     data() {
       return {
         filter: '',
@@ -63,6 +74,9 @@
     computed: {
       ...mapState(['loading', 'queues']),
       filteredQueues() {
+        if (this.lambda) {
+          return this.queues.filter((q) => q.target === this.lambda);
+        }
         if (!this.filter) return this.queues;
         const f = this.filter.toLocaleLowerCase();
         return this.queues.filter((q) =>
