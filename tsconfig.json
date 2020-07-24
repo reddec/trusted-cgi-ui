@@ -3,5 +3,6 @@
   "compilerOptions": {
     "baseUrl": ".",
     "experimentalDecorators": true
-  }
+  },
+  "lib": ["es2017"]
 }

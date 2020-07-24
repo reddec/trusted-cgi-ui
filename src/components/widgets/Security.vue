@@ -1,133 +1,32 @@
 <template>
   <div>
-    <q-card flat>
-      <q-checkbox v-model="clone.public" label="Public access without tokens"/>
-      <br/>
-      <q-list dense v-if="!clone.public" bordered>
-        <q-item-label header>Access tokens</q-item-label>
-        <q-item v-for="[token, label] in tokens" :key="token">
-          <q-item-section>
-            <q-item-label>
-              <code>{{token}}</code>
-            </q-item-label>
-            <q-item-label caption>{{label}}</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-btn icon="delete" @click="()=>$delete(clone.tokens,token)" flat dense round/>
-          </q-item-section>
-        </q-item>
-        <q-item clickable v-ripple @click="openTokenDialog">
-          <q-item-section avatar>
-            <q-icon name="add"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label lines="1">new token</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <br/>
-
-      <q-list bordered>
-        <q-item-label header>Allowed IP <span v-if="allowedIP.length === 0">(currently no restrictions)</span>
-        </q-item-label>
-        <q-item v-for="(ip, index) in allowedIP" :key="ip">
-          <q-item-section>
-            <q-item-label>
-              <code>{{ip}}</code>
-            </q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-btn icon="delete" @click="()=> clone.allowed_ip.splice(index, 1)" flat dense round/>
-          </q-item-section>
-        </q-item>
-        <q-item clickable v-ripple @click="newIP.dialog = true">
-          <q-item-section avatar>
-            <q-icon name="add"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label lines="1">new IP</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <br/>
-      <q-list bordered>
-        <q-item-label header>Allowed origins <span v-if="origins.length === 0">(currently no restrictions)</span>
-        </q-item-label>
-        <q-item v-for="(origin, index) in origins" :key="origin">
-          <q-item-section>
-            <q-item-label>
-              <code>{{origin}}</code>
-            </q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-btn icon="delete" @click="()=> clone.allowed_origin.splice(index, 1)" flat dense round/>
-          </q-item-section>
-        </q-item>
-        <q-item clickable v-ripple @click="newOrigin.dialog = true">
-          <q-item-section avatar>
-            <q-icon name="add"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label lines="1">new origin</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-
-      <q-card-actions align="right">
-        <q-btn flat color="primary" icon="save" :loading="saving" @click="save()">Save</q-btn>
-      </q-card-actions>
-    </q-card>
-
-
-    <q-dialog v-model="newToken.dialog" persistent>
-      <q-card style="min-width: 350px">
+    <div v-if="loading">
+      <q-linear-progress indeterminate/>
+    </div>
+    <div v-else-if="policy">
+      <h6>applied policy
+        <router-link :to="{name:'policy', params:{id:policy.id}}">{{policy.id}}</router-link>
+      </h6>
+      <q-btn-group push>
+        <q-btn color="primary" label="change policy" icon="edit" @click="()=>dialog=true" :loading="assigning"/>
+        <q-btn color="warning" label="clear" icon="clear" @click="unassign" :loading="assigning"/>
+      </q-btn-group>
+    </div>
+    <p v-else>no applied policy,
+      <q-btn color="primary" label="select one" @click="()=>dialog=true" :loading="assigning" flat/>
+    </p>
+    <q-dialog v-model="dialog" persistent>
+      <q-card style="min-width: 450px">
         <q-card-section>
-          <div class="text-h6">Label</div>
+          <div class="text-h6">Select policy</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-input dense v-model="newToken.label" label="Label" autofocus/>
+          <policies-list readonly @click="doAssign"/>
           <br/>
-          <q-input dense v-model="newToken.token" label="Token"/>
         </q-card-section>
-
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup/>
-          <q-btn flat label="Add" v-close-popup @click="addToken()"/>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog v-model="newIP.dialog" persistent>
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">IP address</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <q-input dense v-model="newIP.ip" autofocus/>
-        </q-card-section>
-
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup/>
-          <q-btn flat label="Add" v-close-popup @click="addIP"/>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog v-model="newOrigin.dialog" persistent>
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">Origin</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <q-input dense v-model="newOrigin.origin" autofocus/>
-        </q-card-section>
-
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup/>
-          <q-btn flat label="Add" v-close-popup @click="addOrigin"/>
+          <q-btn flat label="Cancel" v-close-popup :loading="assigning"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -135,111 +34,64 @@
 </template>
 
 <script>
-  import {lambdaAPI} from '../../api'
-
   import {createNamespacedHelpers} from "vuex";
+  import PolicyEditor from "./policies/PolicyEditor";
+  import PoliciesList from "./policies/PoliciesList";
 
-  const {mapState, mapActions, mapGetters} = createNamespacedHelpers('user')
-
+  const policies = createNamespacedHelpers('policies')
+  const user = createNamespacedHelpers('user')
 
   export default {
     name: "Security",
-    data() {
-      return {
-        saving: false,
-        clone: {},
-        newToken: {
-          dialog: false,
-          label: '',
-          token: '',
-        },
-        newIP: {
-          dialog: false,
-          ip: ''
-        },
-        newOrigin: {
-          dialog: false,
-          origin: ''
-        }
-      }
-    },
+    components: {PoliciesList, PolicyEditor},
     beforeMount() {
-      this.updateFields()
+      this.load()
     },
     methods: {
-      async save() {
-        this.saving = true;
-        let cp = Object.assign({}, this.selectedApp?.manifest, this.clone)
+      ...policies.mapActions(['apply', 'clear', 'load']),
+      async doAssign({id, definition, lambdas}) {
+        this.assigning = true;
         try {
-          let app = await lambdaAPI.update(this.token, this.selectedApp?.uid, cp);
-          this.$store.commit('user/updatedApp', app);
-          this.$store.commit('user/selectedApp', app);
+          await this.apply({name: id, lambda: this.selectedApp?.uid})
+          this.dialog = false;
         } catch (e) {
           console.error(e)
         } finally {
-          this.saving = false
+          this.assigning = false
         }
       },
-      openTokenDialog() {
-        this.newToken.label = '';
-        this.newToken.token = uuidv4()
-        this.newToken.dialog = true;
-      },
-      addToken() {
-        if (this.clone.tokens) {
-          this.$set(this.clone.tokens, this.newToken.token || uuidv4(), this.newToken.label)
-        } else {
-          this.$set(this.clone, 'tokens', {
-            [uuidv4()]: this.newToken.label,
-          })
+      async unassign() {
+        this.assigning = true;
+        try {
+          await this.clear(this.selectedApp?.uid)
+          this.dialog = false;
+        } catch (e) {
+          console.error(e)
+        } finally {
+          this.assigning = false
         }
-        this.newToken.label = '';
-      },
-      addOrigin() {
-        if (!this.clone.allowed_origin) {
-          this.$set(this.clone, 'allowed_origin', [])
-        }
-        this.clone.allowed_origin.push(this.newOrigin.origin)
-        this.newOrigin.origin = '';
-      },
-      addIP() {
-        if (!this.clone.allowed_ip) {
-          this.$set(this.clone, 'allowed_ip', [])
-        }
-        this.clone.allowed_ip.push(this.newIP.ip)
-        this.newIP.ip = '';
-      },
-      updateFields() {
-        this.$set(this, 'clone', JSON.parse(JSON.stringify(this.selectedApp?.manifest)))
       }
     },
-    watch: {
-      selectedApp() {
-        this.updateFields()
+    data() {
+      return {
+        dialog: false,
+        assigning: false
       }
     },
     computed: {
-      ...mapState([
-        'selectedApp',
-        'token'
+      ...policies.mapState([
+        'policies', 'loading'
       ]),
-      tokens() {
-        return Object.entries(this.clone.tokens || {})
-      },
-      allowedIP() {
-        return (this.clone.allowed_ip || [])
-      },
-      origins() {
-        return (this.clone.allowed_origin || [])
+      ...user.mapState([
+        'selectedApp'
+      ]),
+      policy() {
+        return (this.policies || []).find((p) => p.lambdas.indexOf(this.selectedApp.uid) !== -1)
       }
     }
   }
 
-  function uuidv4() {
-    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    );
-  }
+
 </script>
 
 <style scoped>

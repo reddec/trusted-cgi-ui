@@ -9,9 +9,11 @@
         <q-card-section class="q-pt-none">
           <q-input dense v-model="name" autofocus label="Queue name"/>
           <br/>
-          <q-input dense v-model="retry" label="Retry attempts"/>
+          <q-input dense v-model="retry" type="number" label="Retry attempts"/>
           <br/>
           <q-input dense v-model="interval" label="Delay between attempts"/>
+          <br/>
+          <q-input dense v-model="itemSize" type="number" label="Maximum request size" :hint="toSize(itemSize)"/>
           <br/>
           <div v-if="!targetLocked">
             <q-input dense v-model="lambda" :disable="targetLocked" label="Target lambda"/>
@@ -63,9 +65,17 @@
         retry: 3,
         interval: '5s',
         lambdas: [],
+        itemSize: 1024 * 1024,
       }
     },
     methods: {
+      toSize(value) {
+        if (value <= 0) return '∞'
+        if (value < 1024) return value + ' B'
+        if (value < 1024 * 1024) return (value / 1024).toPrecision(2) + ' KiB'
+        if (value < 1024 * 1024 * 1024) return (value / (1024 * 1024)).toPrecision(2) + ' MiB'
+        return value / (1024 * 1024 * 1024).toPrecision(2) + ' GiB'
+      },
       async doCreate() {
         this.creating = true;
         try {
@@ -74,7 +84,8 @@
               name: this.name,
               target: this.lambda,
               retry: parseInt(this.retry),
-              interval: this.interval
+              interval: this.interval,
+              max_element_size: parseInt(this.itemSize)
             })
           this.name = '';
           if (!this.targetLocked) {
@@ -90,7 +101,7 @@
       ...mapActions(['create'])
     },
     computed: {
-        ...mapState(['apps', 'appsLoading'])
+      ...mapState(['apps', 'appsLoading'])
     },
     watch: {
       defaultName() {
@@ -98,6 +109,7 @@
       }
     }
   }
+
 </script>
 
 <style scoped>

@@ -19,7 +19,23 @@
           </div>
           <p v-else>policy not found</p>
         </transition>
-
+      </div>
+      <div class="col-md col-sm-12 col-xs-12">
+        <q-list>
+          <q-item>
+            <q-item-label header>Linked lambdas</q-item-label>
+          </q-item>
+          <q-item v-for="uid in policy.lambdas" :key="uid" clickable :to="{name:'app',params:{'name':uid}}">
+            <q-item-section>
+              <q-item-label overline v-if="appsByUID[uid].manifest.name">
+                {{appsByUID[uid].manifest.name}}
+              </q-item-label>
+              <q-item-label caption>
+                {{uid}}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
       </div>
     </div>
   </q-page>
@@ -29,6 +45,7 @@
   import PolicyEditor from "../components/widgets/policies/PolicyEditor";
   import {createNamespacedHelpers} from "vuex";
 
+  const user = createNamespacedHelpers('user')
   const {mapState, mapActions, mapGetters} = createNamespacedHelpers('policies')
   export default {
     name: "Policy",
@@ -54,6 +71,7 @@
     },
     computed: {
       ...mapState(['policies', 'loading']),
+      ...user.mapGetters(['appsByUID']),
       policy() {
         return (this.policies || []).find((p) => p.id === this.id)
       }

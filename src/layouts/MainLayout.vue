@@ -44,6 +44,16 @@
             </q-item-label>
           </q-item-section>
         </q-item>
+        <q-item clickable :to="{name:'lambdas'}">
+          <q-item-section avatar>
+            <q-icon name="device_hub"/>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>
+              Lambdas
+            </q-item-label>
+          </q-item-section>
+        </q-item>
         <q-item clickable :to="{name:'queues'}">
           <q-item-section avatar>
             <q-icon name="queue"/>
@@ -73,37 +83,6 @@
               Settings
             </q-item-label>
           </q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-item-label caption>
-              Functions
-            </q-item-label>
-            <q-item-label>
-              <q-separator/>
-            </q-item-label>
-          </q-item-section>
-
-        </q-item>
-        <q-item
-          clickable
-          v-for="app in apps"
-          :key="app.uid"
-          :to="{name:'app', params:{name:app.uid}}"
-        >
-          <q-item-section avatar>
-            <q-icon name="public" v-if="app.manifest.public"/>
-            <q-icon name="security" v-else/>
-          </q-item-section>
-          <q-item-section>
-
-            <q-item-label>
-              {{app.manifest.name || app.uid }}
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item v-if="loadingApps">
-          <q-circular-progress indeterminate/>
         </q-item>
       </q-list>
     </q-drawer>

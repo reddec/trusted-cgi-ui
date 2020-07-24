@@ -50,6 +50,18 @@ const mod: Module<State, StoreInterface> = {
       })]
     }
   },
+  getters: {
+    policyByLambda(state) {
+      let xmp: any = {}
+      state.policies.forEach((p) => {
+        (p.lambdas as string[]).forEach((l) => {
+          xmp[l] = p
+        })
+      })
+      return xmp
+    }
+
+  },
   actions: {
     async load({state, rootState, commit}, force: boolean = false) {
       if (!force && state.policies && state.policies.length > 0) {
@@ -87,7 +99,12 @@ const mod: Module<State, StoreInterface> = {
     },
     async apply({state, rootState, commit, dispatch}, {name, lambda}) {
       let token = rootState.user.token
-      await policiesAPI.apply(token, name, lambda)
+      await policiesAPI.apply(token, lambda, name)
+      return dispatch('load', true)
+    },
+    async clear({state, rootState, commit, dispatch}, name) {
+      let token = rootState.user.token
+      await policiesAPI.clear(token, name)
       return dispatch('load', true)
     },
   }

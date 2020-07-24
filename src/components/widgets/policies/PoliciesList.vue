@@ -7,36 +7,57 @@
             <template v-slot:before>
               <q-icon name="search"/>
             </template>
-            <template v-slot:after>
+            <template v-slot:after v-if="!readonly">
               <policies-add :default-name="filter"/>
             </template>
           </q-input>
         </slot>
       </q-item-label>
     </q-item-section>
-    <q-item v-for="policy in filteredPolicies" :key="policy.id">
-      <q-item-section>
-        <router-link :to="{'name':'policy', params:{'id':policy.id}}">
+    <div v-if="readonly">
+      <q-item v-for="policy in filteredPolicies" :key="policy.id" clickable @click="$emit('click', policy)">
+        <q-item-section>
           <q-item-label overline>
             <slot name="item" v-bind:policy="policy">
               {{policy.id}}
             </slot>
           </q-item-label>
-        </router-link>
-        <q-item-label caption>
-          <slot name="hint" v-bind:policy="policy">
-            <span v-if="policy.lambdas && policy.lambdas.length > 0">
-            -> {{ policy.lambdas.join(", ") }}
+          <q-item-label caption>
+            <slot name="hint" v-bind:policy="policy">
+           <span v-if="policy.lambdas && policy.lambdas.length > 0">
+            -> {{ policy.lambdas.length }} lambdas
             </span>
-          </slot>
-        </q-item-label>
-      </q-item-section>
-      <q-item-section top side>
-        <div class="text-grey-8 q-gutter-xs">
-          <policy-remove :name="policy.id"/>
-        </div>
-      </q-item-section>
-    </q-item>
+            </slot>
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+    </div>
+    <div v-else>
+      <q-item v-for="policy in filteredPolicies" :key="policy.id">
+        <q-item-section>
+          <router-link :to="{'name':'policy', params:{'id':policy.id}}">
+            <q-item-label overline>
+              <slot name="item" v-bind:policy="policy">
+                {{policy.id}}
+              </slot>
+            </q-item-label>
+          </router-link>
+          <q-item-label caption>
+            <slot name="hint" v-bind:policy="policy">
+            <span v-if="policy.lambdas && policy.lambdas.length > 0">
+            -> {{ policy.lambdas.length }} lambdas
+            </span>
+            </slot>
+          </q-item-label>
+        </q-item-section>
+        <q-item-section top side>
+          <div class="text-grey-8 q-gutter-xs">
+            <policy-remove :name="policy.id"/>
+          </div>
+        </q-item-section>
+      </q-item>
+    </div>
+
   </q-list>
 </template>
 
@@ -51,7 +72,7 @@
     components: {PolicyRemove, PoliciesAdd},
     props: {
       'lambda': {},
-      noLambdaLink: {
+      readonly: {
         type: Boolean
       }
     },

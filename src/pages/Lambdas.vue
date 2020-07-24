@@ -2,13 +2,23 @@
   <q-page class="q-col-gutter-sm q-pa-md">
     <div class="row q-col-gutter-md">
       <div class="col-md col-sm-12 col-xs-12">
-        <q-linear-progress indeterminate v-if="globalStatsLoading"/>
-        <minute-hits-stats-chart :records="globalStats"/>
+        <q-linear-progress indeterminate v-if="appsLoading"/>
+        <lambdas-list :filter="lambda" @click="(app) => openLambda( app.uid)">
+          <template slot="head">
+            <q-item-label header>
+              <slot>
+                <q-input v-model="lambda" label="lambda name or uid">
+                  <template v-slot:before>
+                    <q-icon name="search"/>
+                  </template>
+                </q-input>
+              </slot>
+            </q-item-label>
+          </template>
+        </lambdas-list>
       </div>
-    </div>
-    <div class="row q-col-gutter-md">
       <div class="col-md col-sm-12 col-xs-12">
-       <minute-hits-stats-table :records="globalStats"/>
+        <new-lambda/>
       </div>
     </div>
   </q-page>
@@ -20,8 +30,7 @@
   import {baseURL, projectAPI} from '../api'
   import MinuteHitsStats from "../components/MinuteHitsStats";
   import LambdasList from "../components/widgets/lambdas/LambdasList";
-  import MinuteHitsStatsChart from "../components/MinuteHitsStatsChart";
-  import MinuteHitsStatsTable from "../components/MinuteHitsStatsTable";
+  import NewLambda from "../components/NewLambda";
 
   const userMod = createNamespacedHelpers('user')
   const systemMod = createNamespacedHelpers('system')
@@ -29,11 +38,10 @@
 
   export default Vue.extend({
     name: 'Dashboard',
-    components: {MinuteHitsStatsTable, MinuteHitsStatsChart, LambdasList, MinuteHitsStats},
+    components: {NewLambda, LambdasList, MinuteHitsStats},
     data() {
       return {
         repo: '',
-        creating: false,
         lambda: ''
       }
     },
@@ -42,20 +50,14 @@
     },
     methods: {
       async reload(force = false) {
-        this.$store.dispatch('system/globalStats')
+        this.$store.dispatch('user/loadApps')
       },
       openLambda(name) {
         this.$router.push({name: 'app', params: {name: name}})
       },
     },
     computed: {
-      ...userMod.mapState([
-        'token'
-      ]),
-      ...systemMod.mapState([
-        'globalStats',
-        'globalStatsLoading'
-      ]),
+      ...userMod.mapState(['appsLoading']),
       baseURL() {
         return baseURL
       }

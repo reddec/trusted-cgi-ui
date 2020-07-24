@@ -8,6 +8,7 @@
     >
       <h3>Login</h3>
       <q-input label="User name" v-model="loginName" autocorrect="off"
+               autofocus
                autocapitalize="off"
                autocomplete="off"
                spellcheck="false"/>
