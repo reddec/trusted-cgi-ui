@@ -54,6 +54,16 @@
             </q-item-label>
           </q-item-section>
         </q-item>
+        <q-item clickable :to="{name:'policies'}">
+          <q-item-section avatar>
+            <q-icon name="policy"/>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>
+              Policies
+            </q-item-label>
+          </q-item-section>
+        </q-item>
         <q-item clickable :to="{name:'settings'}">
           <q-item-section avatar>
             <q-icon name="settings"/>

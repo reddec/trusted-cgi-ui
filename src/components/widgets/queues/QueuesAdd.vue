@@ -66,12 +66,6 @@
       }
     },
     methods: {
-      filterLambdas(val, update, abort) {
-        update(() => {
-          const nd = val.toLocaleLowerCase();
-          this.lambdas = this.apps.filter(v => v.uid.toLocaleLowerCase().indexOf(nd) !== -1)
-        })
-      },
       async doCreate() {
         this.creating = true;
         try {
@@ -96,10 +90,7 @@
       ...mapActions(['create'])
     },
     computed: {
-      lambdasView() {
-        return this.lambdas.map((x) => x.manifest.name || x.uid)
-      },
-      ...mapState(['apps', 'appsLoading'])
+        ...mapState(['apps', 'appsLoading'])
     },
     watch: {
       defaultName() {

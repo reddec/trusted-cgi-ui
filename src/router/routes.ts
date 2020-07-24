@@ -27,6 +27,18 @@ const routes: RouteConfig[] = [
         props: true,
         name: 'queues',
         component: () => import('pages/Queues.vue')
+      },
+      {
+        path: '/policies',
+        props: true,
+        name: 'policies',
+        component: () => import('pages/Policies.vue')
+      },
+      {
+        path: '/policy/:id',
+        props: true,
+        name: 'policy',
+        component: () => import('pages/Policy.vue')
       }
     ]
   }
