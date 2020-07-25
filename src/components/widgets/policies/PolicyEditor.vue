@@ -2,13 +2,13 @@
   <q-card flat>
     <q-checkbox :value="local.public" @input="update('public', $event)" label="Public access without tokens"/>
     <br/>
-    <map-editor :def-value="uuid4"
+    <map-editor :def-key="uuid4"
                 :value="local.tokens"
                 :disabled="local.public"
                 @input="update('tokens', $event)"
                 title="Access tokens"
-                key-label="Label"
-                value-label="Token"/>
+                key-label="Token"
+                value-label="Label"/>
 
     <br/>
     <list-editor
