@@ -9,7 +9,8 @@
 
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
           <div v-if="!isPublic">
-            <q-select label="Token" v-model='token' :options="Object.keys(selectedApp.manifest.tokens || {})"/>
+            <q-select label="Token" :loading="policies_loading" v-model='token'
+                      :options="tokens"/>
             <br/>
           </div>
 
@@ -18,9 +19,9 @@
             <q-item v-for="(value, index) in headers" :key="index">
               <q-item-section>
                 <q-item-label>
-                  <code>{{value.header}}</code>
+                  <code>{{ value.header }}</code>
                 </q-item-label>
-                <q-item-label caption>{{value.value}}</q-item-label>
+                <q-item-label caption>{{ value.value }}</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-btn icon="delete" @click="()=>headers.splice(index, 1)" flat dense round/>
@@ -50,7 +51,7 @@
 
             <q-item-label header>Body</q-item-label>
             <q-card-section>
-              <p class="response">{{response.body}}</p>
+              <p class="response">{{ response.body }}</p>
             </q-card-section>
           </q-card>
         </div>
@@ -62,7 +63,7 @@
                 <q-item-label>
                   <code>Code</code>
                 </q-item-label>
-                <q-item-label caption>{{response.code}}</q-item-label>
+                <q-item-label caption>{{ response.code }}</q-item-label>
               </q-item-section>
             </q-item>
             <q-item>
@@ -70,7 +71,7 @@
                 <q-item-label>
                   <code>Description</code>
                 </q-item-label>
-                <q-item-label caption>{{response.status}}</q-item-label>
+                <q-item-label caption>{{ response.status }}</q-item-label>
               </q-item-section>
             </q-item>
             <q-item>
@@ -78,8 +79,8 @@
                 <q-item-label>
                   <code>Time</code>
                 </q-item-label>
-                <q-item-label caption>{{response.time_fb}} ms [Headers] + {{response.time_pd}} ms [Payload] =
-                  {{response.time}} ms
+                <q-item-label caption>{{ response.time_fb }} ms [Headers] + {{ response.time_pd }} ms [Payload] =
+                  {{ response.time }} ms
                 </q-item-label>
               </q-item-section>
             </q-item>
@@ -90,9 +91,9 @@
             <q-item v-for="[header, value] in response.headers" :key="header">
               <q-item-section>
                 <q-item-label>
-                  <code>{{header}}</code>
+                  <code>{{ header }}</code>
                 </q-item-label>
-                <q-item-label caption>{{value}}</q-item-label>
+                <q-item-label caption>{{ value }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -133,116 +134,126 @@
 </template>
 
 <script>
-  import {createNamespacedHelpers} from "vuex";
-  import {baseURL} from "../../api";
+import {createNamespacedHelpers} from "vuex";
+import {baseURL} from "../../api";
 
-  const {mapState, mapActions, mapGetters} = createNamespacedHelpers('user')
+const {mapState, mapActions, mapGetters} = createNamespacedHelpers('user')
+const policies = createNamespacedHelpers('policies')
 
-
-  export default {
-    name: "Playground",
-    components: {
-      editor: require('vue2-ace-editor'),
-    },
-    data() {
-      return {
-        running: false,
-        payload: '{}',
-        token: '',
+export default {
+  name: "Playground",
+  components: {
+    editor: require('vue2-ace-editor'),
+  },
+  data() {
+    return {
+      running: false,
+      payload: '{}',
+      token: '',
+      headers: [],
+      availableHeaders: [],
+      newInput: {
+        dialog: false,
+        header: '',
+        value: ''
+      },
+      response: {
+        code: 0,
+        time: 0,
+        time_fb: 0,
+        time_pd: 0,
+        status: '',
         headers: [],
-        availableHeaders: [],
-        newInput: {
-          dialog: false,
-          header: '',
-          value: ''
-        },
-        response: {
-          code: 0,
-          time: 0,
-          time_fb: 0,
-          time_pd: 0,
-          status: '',
-          headers: [],
-          body: ''
-        }
-      }
-    },
-
-    methods: {
-      async run() {
-        this.running = true;
-        this.$set(this, 'response', {
-          code: 0,
-          status: '',
-          headers: [],
-          body: '',
-          time: 0,
-          time_fb: 0,
-          time_pd: 0,
-        })
-        try {
-          const begin = Date.now()
-          const res = await fetch(baseURL + 'a/' + this.selectedApp?.uid, {
-            method: "POST",
-            headers: Object.assign({},
-              Object.fromEntries(this.headers.map(kv => [kv.header, kv.value])),
-              {'Authorization': this.token}),
-            body: this.payload
-          })
-          const middle = Date.now()
-          this.response.time_fb = middle - begin
-          this.response.code = res.status
-          this.response.status = res.statusText
-          this.response.headers = Object.entries(Object.fromEntries(res.headers.entries()))
-          this.response.body = await res.text()
-
-          const end = Date.now()
-          this.response.time = end - begin
-          this.response.time_pd = end - middle
-        } catch (e) {
-          console.error(e)
-        } finally {
-          this.running = false;
-        }
-      },
-      addHeader() {
-        this.headers.push({
-          header: this.newInput.header,
-          value: this.newInput.value,
-        })
-        this.newInput.header = '';
-        this.newInput.value = '';
-      },
-      filterHeader(val, update, abort) {
-        update(() => {
-          const nd = val.toLocaleLowerCase();
-          this.availableHeaders = Object.keys(this.selectedApp.manifest.input_headers || {}).filter(v => v.toLocaleLowerCase().indexOf(nd) !== -1)
-        })
-      },
-      editorInit(editor) {
-        editor.resize();
-        editor.renderer.updateFull();
-        require('brace/ext/language_tools')
-        require('brace/mode/json')
-      }
-    },
-    computed: {
-      ...mapState([
-        'selectedApp',
-      ]),
-      isPublic() {
-        return this.selectedApp.manifest.public
+        body: ''
       }
     }
+  },
+
+  methods: {
+    async run() {
+      this.running = true;
+      this.$set(this, 'response', {
+        code: 0,
+        status: '',
+        headers: [],
+        body: '',
+        time: 0,
+        time_fb: 0,
+        time_pd: 0,
+      })
+      try {
+        const begin = Date.now()
+        const res = await fetch(baseURL + 'a/' + this.selectedApp?.uid, {
+          method: "POST",
+          headers: Object.assign({},
+            Object.fromEntries(this.headers.map(kv => [kv.header, kv.value])),
+            {'Authorization': this.token}),
+          body: this.payload
+        })
+        const middle = Date.now()
+        this.response.time_fb = middle - begin
+        this.response.code = res.status
+        this.response.status = res.statusText
+        this.response.headers = Object.entries(Object.fromEntries(res.headers.entries()))
+        this.response.body = await res.text()
+
+        const end = Date.now()
+        this.response.time = end - begin
+        this.response.time_pd = end - middle
+      } catch (e) {
+        console.error(e)
+      } finally {
+        this.running = false;
+      }
+    },
+    beforeMount() {
+      this.load_policies()
+    },
+    addHeader() {
+      this.headers.push({
+        header: this.newInput.header,
+        value: this.newInput.value,
+      })
+      this.newInput.header = '';
+      this.newInput.value = '';
+    },
+    filterHeader(val, update, abort) {
+      update(() => {
+        const nd = val.toLocaleLowerCase();
+        this.availableHeaders = Object.keys(this.selectedApp.manifest.input_headers || {}).filter(v => v.toLocaleLowerCase().indexOf(nd) !== -1)
+      })
+    },
+    editorInit(editor) {
+      editor.resize();
+      editor.renderer.updateFull();
+      require('brace/ext/language_tools')
+      require('brace/mode/json')
+    },
+    ...policies.mapActions({'load_policies': 'load'}),
+  },
+  computed: {
+    ...mapState([
+      'selectedApp',
+    ]),
+    ...policies.mapState({
+      'policies': 'policies', 'policies_loading': 'loading'
+    }),
+    tokens() {
+      return (this.policies || []).flatMap((policy) => Object.keys(policy.definition.tokens || {}))
+    },
+    isPublic() {
+      return this.selectedApp.manifest.public
+    }
   }
+}
 </script>
 
 <style scoped>
-  .response {
-    font-family: monospace;
-    word-wrap: break-word;
-    white-space: pre;
+.response {
+  font-family: monospace;
+  word-wrap: break-word;
+  white-space: pre;
 
-    overflow-x: auto;
-  }
+  overflow-x: auto;
+}
 </style>
